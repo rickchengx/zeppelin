@@ -1,4 +1,4 @@
-name: k8s_ci_test
+name: build_distribution_test
 on:
   push:
   pull_request:
@@ -26,7 +26,7 @@ defaults:
     shell: bash -l {0}
 
 jobs:
-  test-core-modules:
+  build_distribution:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -64,10 +64,8 @@ jobs:
           R -e "IRkernel::installspec()"
           conda list
           conda info
-      - name: install application with some interpreter
-        run: mvn install -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -Phelium-dev -Pexamples -P${{ matrix.hadoop }} -B
-      - name: install and test plugins
-        run: mvn package -DskipRat -pl zeppelin-plugins -amd -B
+      - name: build the final distribution
+        run: mvn clean package -Pbuild-distr -DskipTests -DskipRat -B
       #- name: set up and start minikube cluster
       #  uses: medyagh/setup-minikube@master
       #- name: verify minikube
