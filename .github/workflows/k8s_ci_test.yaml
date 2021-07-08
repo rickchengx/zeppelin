@@ -69,7 +69,7 @@ jobs:
       - name: build docker image
         run: |
           mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
-          docker build -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin .
+          docker build -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin ./scripts/docker/zeppelin/build-from-distribution/
           echo -n "verifying images:"
           docker images    
       - name: set up and start minikube cluster
