@@ -26,12 +26,10 @@ defaults:
     shell: bash -l {0}
 
 jobs:
-  test-core-modules:
+  test-kubernetes-mode:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
-      matrix:
-        hadoop: [hadoop2, hadoop3]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -64,15 +62,24 @@ jobs:
           R -e "IRkernel::installspec()"
           conda list
           conda info
-      - name: install application with some interpreter
-        run: mvn install -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -Phelium-dev -Pexamples -P${{ matrix.hadoop }} -B
-      - name: install and test plugins
-        run: mvn package -DskipRat -pl zeppelin-plugins -amd -B
-      #- name: set up and start minikube cluster
-      #  uses: medyagh/setup-minikube@master
-      #- name: verify minikube
-      #  run: kubectl get pods -A
-      - name: verify distribution
-        run: ls zeppelin-distribution/target
-      - name: verify k8s features
-        run: mvn test -DskipRat -pl zeppelin-plugins -am -Dtest=K8sStandardInterpreterLauncherTest -DfailIfNoTests=false -B
+      - name: build the final distribution
+        run: mvn clean package -Pbuild-distr -DskipTests -DskipRat -B
+      - name: check the final distribution
+        run: ls -l zeppelin-distribution/target
+      - name: build docker image
+        run: |
+          mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
+          docker build -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin .
+          echo -n "verifying images:"
+          docker images    
+      - name: set up and start minikube cluster
+        uses: medyagh/setup-minikube@master
+      - name: verify minikube
+        run: |
+          kubectl get pods -A
+          kubectl cluster-info
+      - name: Deploy to minikube
+        run: kubectl apply -f ./k8s/zeppelin-server-ci-test.yaml
+      - name: verify deployment
+        run: kubectl get pods -A
+      
