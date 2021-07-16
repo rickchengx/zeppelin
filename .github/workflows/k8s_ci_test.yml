@@ -66,20 +66,19 @@ jobs:
         run: mvn clean package -Pbuild-distr -DskipTests -DskipRat -B
       - name: check the final distribution
         run: ls -l zeppelin-distribution/target
-      - name: build docker image
-        run: |
-          mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
-          docker build --progress=plain -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin ./scripts/docker/zeppelin/build-from-distribution/
-          echo -n "verifying images:"
-          docker images    
       - name: set up and start minikube cluster
         uses: medyagh/setup-minikube@master
       - name: verify minikube
         run: |
           kubectl get pods -A
           kubectl cluster-info
-      - name: Deploy to minikube
-        run: kubectl apply -f ./k8s/zeppelin-server-ci-test.yaml
-      - name: verify deployment
-        run: kubectl get pods -A
+      - name: build docker image
+        run: |
+          eval $(minikube -p minikube docker-env)
+          mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
+          docker build --progress=plain -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin ./scripts/docker/zeppelin/build-from-distribution/
+          echo -n "verifying images:"
+          docker images
+      - name: mvn testing
+        run: mvn test -pl zeppelin-plugins -amd -B -DskipRat
       
