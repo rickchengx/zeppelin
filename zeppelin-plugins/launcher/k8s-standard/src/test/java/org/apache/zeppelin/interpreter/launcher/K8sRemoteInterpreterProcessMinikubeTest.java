@@ -54,7 +54,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         // when change those values, update the yaml file as well.
         assertEquals("12321:12321", intp.getInterpreterPortRange());
         assertEquals(22321, intp.getSparkDriverPort());
-        assertEquals(22322, intp.getSparkBlockmanagerPort());
+        assertEquals(22322, intp.getSparkBlockManagerPort());
     }
 
     @Test
