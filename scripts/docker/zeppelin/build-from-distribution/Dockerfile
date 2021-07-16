@@ -43,7 +43,6 @@ RUN echo "$LOG_TAG install basic packages" && \
 #     rm -f /tmp/zeppelin-${Z_VERSION}-bin-all.tgz && \
 
 ADD zeppelin-${Z_VERSION}.tar.gz /
-RUN ls -la /zeppelin-${Z_VERSION}
 RUN mv /zeppelin-${Z_VERSION} ${ZEPPELIN_HOME} && \
     chown -R root:root ${ZEPPELIN_HOME} && \
     mkdir -p ${ZEPPELIN_HOME}/logs ${ZEPPELIN_HOME}/run ${ZEPPELIN_HOME}/webapps && \
