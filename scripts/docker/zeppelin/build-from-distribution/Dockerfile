@@ -68,8 +68,7 @@ ENV PATH /opt/conda/envs/python_3_with_R/bin:/opt/conda/bin:$PATH
 #     rm -f /tmp/zeppelin-${Z_VERSION}-bin-all.tgz && \
 
 ADD zeppelin-${Z_VERSION}.tar.gz /
-RUN rm -r ${ZEPPELIN_HOME} && \
-    ln -s /zeppelin-${Z_VERSION} ${ZEPPELIN_HOME} && \
+RUN mv /zeppelin-${Z_VERSION} ${ZEPPELIN_HOME} && \
     chown -R root:root ${ZEPPELIN_HOME} && \
     mkdir -p ${ZEPPELIN_HOME}/logs ${ZEPPELIN_HOME}/run ${ZEPPELIN_HOME}/webapps && \
     # Allow process to edit /etc/passwd, to create a user entry for zeppelin

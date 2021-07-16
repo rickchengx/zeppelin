@@ -115,7 +115,7 @@ spec:
             path: nginx.conf
       containers:
       - name: zeppelin-server
-        image: $(ZEPPELIN_K8S_CONTAINER_IMAGE)
+        image: local/zeppelin:latest
         imagePullPolicy: Never
         command: ["sh", "-c", "$(ZEPPELIN_HOME)/bin/zeppelin.sh"]
         lifecycle:
