@@ -64,7 +64,7 @@ jobs:
           conda info
       - name: build the final distribution
         # run: mvn clean package -Pbuild-distr -DskipTests -DskipRat -B
-        run: mvn install -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -B
+        run: mvn install -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell,zeppelin-distribution -am -B
       - name: check the final distribution
         run: ls -l zeppelin-distribution/target
       - name: set up and start minikube cluster
