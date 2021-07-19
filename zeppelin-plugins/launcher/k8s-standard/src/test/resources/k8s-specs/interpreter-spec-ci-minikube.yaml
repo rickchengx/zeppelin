@@ -43,6 +43,7 @@ spec:
   containers:
   - name: {{zeppelin.k8s.interpreter.container.name}}
     image: {{zeppelin.k8s.interpreter.container.image}}
+    imagePullPolicy: Never
     args:
       - "$(ZEPPELIN_HOME)/bin/interpreter.sh"
       - "-d"
