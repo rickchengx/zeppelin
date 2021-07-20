@@ -73,6 +73,7 @@ jobs:
         run: |
           kubectl get pods -A
           kubectl cluster-info
+          kubectl describe nodes
       - name: build docker image
         run: |
           eval $(minikube -p minikube docker-env)
