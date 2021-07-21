@@ -73,6 +73,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         assertEquals(22322, intp.getSparkBlockManagerPort());
     }
 
+    /*
     @Test
     public void testK8sStartSuccessful() throws IOException, InterpreterNotFoundException, InterpreterException {
         // given
@@ -90,7 +91,9 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
     }
 
-    /*
+     */
+
+
     @Test
     public void testK8sStartSparkSuccessful() throws IOException, InterpreterNotFoundException, InterpreterException {
         // given
@@ -133,7 +136,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         InterpreterContext context = new InterpreterContext.Builder().setNoteId("note1").setParagraphId("paragraph_1").build();
 
         //InterpreterResult interpreterResult = interpreter.interpret("sc.version", context);
-        /assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
+        //assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
 
 
 
@@ -143,7 +146,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("45"));
 
     }
-    */
+
 
 
 
