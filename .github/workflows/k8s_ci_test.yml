@@ -85,5 +85,7 @@ jobs:
           echo -n "verifying images:"
           docker images
       - name: mvn testing
-        run: mvn package -DskipRat -pl zeppelin-plugins -amd -B
+        run: |
+          export SERVICE_DOMAIN=mydomain
+          mvn package -DskipRat -pl zeppelin-plugins -amd -B
       
