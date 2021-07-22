@@ -79,6 +79,7 @@ jobs:
           kubectl cluster-info
           kubectl describe nodes
           ls -al /tmp
+          cat /tmp/minikube*
       - name: build docker image
         run: |
           eval $(minikube -p minikube docker-env)
