@@ -184,6 +184,7 @@ public class K8sRemoteInterpreterProcess extends RemoteInterpreterManagedProcess
 
   @Override
   public void stop() {
+    /*
     super.stop();
     // WATCH for soft shutdown
     PodPhaseWatcher podWatcher = new PodPhaseWatcher(phase -> StringUtils.equalsAny(phase, "Succeeded", "Failed"));
@@ -212,6 +213,7 @@ public class K8sRemoteInterpreterProcess extends RemoteInterpreterManagedProcess
         LOGGER.info("Error on closing Port Forwarding", e);
       }
     }
+     */
   }
 
   @Override
