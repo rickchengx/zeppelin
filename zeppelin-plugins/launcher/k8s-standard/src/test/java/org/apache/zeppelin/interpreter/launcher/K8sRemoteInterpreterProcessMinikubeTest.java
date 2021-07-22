@@ -32,6 +32,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSettingManager = zeppelin.getInterpreterSettingManager();
     }
 
+    /*
     @AfterClass
     public static void tearDown() throws IOException {
         if (zeppelin != null) {
@@ -73,6 +74,8 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         assertEquals(22322, intp.getSparkBlockManagerPort());
     }
 
+     */
+
 
     @Test
     public void testK8sStartSuccessful() throws IOException, InterpreterNotFoundException, InterpreterException {
@@ -102,11 +105,11 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.imagePullPolicy", "Never");
 
         interpreterSetting.setProperty("zeppelin.k8s.spark.container.imagePullPolicy", "Never");
-        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv5");
+        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4");
         interpreterSetting.setProperty("SPARK_HOME", "/spark");
         interpreterSetting.setProperty("spark.master", "k8s://https://kubernetes.default.svc");
         interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
-        //interpreterSetting.setProperty("spark.executor.memory", "512m");
+
         interpreterSetting.setProperty("spark.kubernetes.container.image.pullPolicy", "Never");
         interpreterSetting.setProperty("SPARK_PRINT_LAUNCH_COMMAND", "true");
 
@@ -144,8 +147,8 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("45"));
 
     }
-*/
 
+*/
 
 
 

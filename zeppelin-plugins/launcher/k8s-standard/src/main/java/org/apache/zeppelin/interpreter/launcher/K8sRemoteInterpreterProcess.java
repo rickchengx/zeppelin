@@ -116,8 +116,9 @@ public class K8sRemoteInterpreterProcess extends RemoteInterpreterManagedProcess
     this.properties = properties;
     this.portForward = portForward;
     this.sparkImage = sparkImage;
-    this.podName = interpreterGroupName.toLowerCase() + "-"
-        + RandomStringUtils.randomAlphabetic(6).toLowerCase();
+//    this.podName = interpreterGroupName.toLowerCase() + "-"
+//        + RandomStringUtils.randomAlphabetic(6).toLowerCase();
+    this.podName = interpreterGroupName.toLowerCase();
     this.timeoutDuringPending = timeoutDuringPending;
   }
 
