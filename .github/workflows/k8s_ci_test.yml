@@ -95,13 +95,11 @@ jobs:
       - name: mvn testing
         run: |
           export SERVICE_DOMAIN=mydomain
-          mvn package -DskipRat -pl zeppelin-plugins -amd -Dtest=K8sRemoteInterpreterProcessMinikubeTest -B
+          mvn package -DskipRat -pl zeppelin-plugins -amd -B
       - name: Cat minikube logs
         if: failure()
         run: |
           kubectl get pods -A
-          kubectl describe pod sh
-          kubectl logs sh
           minikube logs
           minikube logs > ~/minikube_logs.log
       - name: Upload minikube logs
