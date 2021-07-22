@@ -99,7 +99,7 @@ jobs:
       - name: Cat minikube logs
         if: failure()
         run: |
-          minikube get pods -A
+          kubectl get pods -A
           kubectl describe pod sh
           kubectl logs sh
           minikube logs

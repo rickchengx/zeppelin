@@ -116,9 +116,8 @@ public class K8sRemoteInterpreterProcess extends RemoteInterpreterManagedProcess
     this.properties = properties;
     this.portForward = portForward;
     this.sparkImage = sparkImage;
-//    this.podName = interpreterGroupName.toLowerCase() + "-"
-//        + RandomStringUtils.randomAlphabetic(6).toLowerCase();
-    this.podName = interpreterGroupName.toLowerCase();
+    this.podName = interpreterGroupName.toLowerCase() + "-"
+        + RandomStringUtils.randomAlphabetic(6).toLowerCase();
     this.timeoutDuringPending = timeoutDuringPending;
   }
 
@@ -180,12 +179,16 @@ public class K8sRemoteInterpreterProcess extends RemoteInterpreterManagedProcess
         }
       }
     }
+
+    String log = client.pods().inNamespace(namespace).withName(podName).getLog();
+    LOGGER.info("rick log: " + log);
   }
 
   @Override
   public void stop() {
-    /*
     super.stop();
+    String log = client.pods().inNamespace(namespace).withName(podName).getLog();
+    LOGGER.info("rick log: " + log);
     // WATCH for soft shutdown
     PodPhaseWatcher podWatcher = new PodPhaseWatcher(phase -> StringUtils.equalsAny(phase, "Succeeded", "Failed"));
     try (Watch watch = client.pods().inNamespace(namespace).withName(podName).watch(podWatcher)) {
@@ -213,7 +216,6 @@ public class K8sRemoteInterpreterProcess extends RemoteInterpreterManagedProcess
         LOGGER.info("Error on closing Port Forwarding", e);
       }
     }
-     */
   }
 
   @Override

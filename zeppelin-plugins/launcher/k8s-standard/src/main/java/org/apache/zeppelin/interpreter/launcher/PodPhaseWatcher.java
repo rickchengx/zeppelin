@@ -21,6 +21,8 @@ package org.apache.zeppelin.interpreter.launcher;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Predicate;
 
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +46,13 @@ public class PodPhaseWatcher implements Watcher<Pod> {
     PodStatus status = pod.getStatus();
     if (status != null && predicate.test(status.getPhase())) {
       LOGGER.info("Pod {} meets phase {}", pod.getMetadata().getName(), status.getPhase());
+
+      KubernetesClient client = new DefaultKubernetesClient();
+      String log = client.pods().inNamespace(pod.getMetadata().getNamespace()).withName(pod.getMetadata().getName()).getLog();
+      LOGGER.info("rick phase " + status.getPhase() + log);
+
       countDownLatch.countDown();
+
     }
   }
 

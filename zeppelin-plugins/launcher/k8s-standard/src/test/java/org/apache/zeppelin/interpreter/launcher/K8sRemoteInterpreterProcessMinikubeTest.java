@@ -32,7 +32,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSettingManager = zeppelin.getInterpreterSettingManager();
     }
 
-    /*
+
     @AfterClass
     public static void tearDown() throws IOException {
         if (zeppelin != null) {
@@ -40,6 +40,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         }
     }
 
+    /*
     @Test
     public void testPredefinedPortNumbers() {
         // given
