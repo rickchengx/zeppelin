@@ -74,9 +74,11 @@ jobs:
         uses: medyagh/setup-minikube@master
       - name: verify minikube
         run: |
+          env
           kubectl get pods -A
           kubectl cluster-info
           kubectl describe nodes
+          ls -al /tmp
       - name: build docker image
         run: |
           eval $(minikube -p minikube docker-env)
@@ -88,4 +90,3 @@ jobs:
         run: |
           export SERVICE_DOMAIN=mydomain
           mvn package -DskipRat -pl zeppelin-plugins -amd -B
-      
