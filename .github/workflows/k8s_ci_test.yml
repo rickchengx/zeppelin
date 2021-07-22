@@ -78,7 +78,8 @@ jobs:
       - name: verify minikube
         run: |
           env
-          sleep 1m
+          # wait for the minikube to start
+          sleep 2m
           kubectl get pods -A
           kubectl cluster-info
           kubectl describe nodes
