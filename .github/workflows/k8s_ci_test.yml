@@ -88,7 +88,7 @@ jobs:
       - name: prepare docker images
         run: |
           eval $(minikube -p minikube docker-env)
-          docker pull docker pull registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4
+          docker pull registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4
           docker tag registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4 local/spark:latest
           mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
           docker build --progress=plain -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin:latest ./scripts/docker/zeppelin/build-from-distribution/
