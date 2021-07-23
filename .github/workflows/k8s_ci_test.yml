@@ -90,8 +90,8 @@ jobs:
       - name: prepare docker images
         run: |
           eval $(minikube -p minikube docker-env)
-          docker pull bitnami/spark:3.1.2
-          docker tag bitnami/spark:3.1.2 local/spark
+          docker pull registry.cn-hangzhou.aliyuncs.com/streamcompute/spark:3.1.2
+          docker tag registry.cn-hangzhou.aliyuncs.com/streamcompute/spark:3.1.2 local/spark
           mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
           docker build --progress=plain -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin ./scripts/docker/zeppelin/build-from-distribution/
           echo -n "verifying images:"
@@ -99,7 +99,7 @@ jobs:
       - name: mvn testing
         run: |
           export SERVICE_DOMAIN=mydomain
-          mvn package -DskipRat -pl zeppelin-plugins -amd -B
+          mvn package -DskipRat -pl zeppelin-plugins -amd -Dtest=K8sRemoteInterpreterProcessMinikubeTest -DfailIfNoTests=false -B
       - name: Cat minikube logs
         if: failure()
         run: |

@@ -188,7 +188,7 @@ public class K8sRemoteInterpreterProcess extends RemoteInterpreterManagedProcess
   public void stop() {
     super.stop();
     String log = client.pods().inNamespace(namespace).withName(podName).getLog();
-    LOGGER.info("rick stop log: " + log);
+    LOGGER.info("rick log stop: " + log);
     // WATCH for soft shutdown
     PodPhaseWatcher podWatcher = new PodPhaseWatcher(phase -> StringUtils.equalsAny(phase, "Succeeded", "Failed"));
     try (Watch watch = client.pods().inNamespace(namespace).withName(podName).watch(podWatcher)) {

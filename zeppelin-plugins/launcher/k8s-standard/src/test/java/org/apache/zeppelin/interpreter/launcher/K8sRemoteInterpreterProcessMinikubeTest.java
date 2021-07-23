@@ -40,7 +40,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         }
     }
 
-
+/*
     @Test
     public void testK8sStartSuccessful() throws InterpreterException {
         // given
@@ -57,7 +57,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         InterpreterResult interpreterResult = interpreter.interpret("pwd", context);
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
     }
-
+*/
 
 
     @Test
@@ -104,11 +104,6 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("45"));
 
     }
-
-
-
-
-
 /*
     @Test
     public void testK8sStartFailed() {
