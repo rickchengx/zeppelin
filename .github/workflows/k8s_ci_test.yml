@@ -85,8 +85,6 @@ jobs:
           kubectl get pods -A
           kubectl cluster-info
           kubectl describe nodes
-          ls -al /tmp
-          cat /tmp/minikube*
       - name: prepare docker images
         run: |
           eval $(minikube -p minikube docker-env)
@@ -99,7 +97,7 @@ jobs:
       - name: mvn testing
         run: |
           export SERVICE_DOMAIN=mydomain
-          mvn package -DskipRat -pl zeppelin-plugins -amd -Dtest=K8sRemoteInterpreterProcessMinikubeTest -DfailIfNoTests=false -B
+          mvn package -DskipRat -pl zeppelin-plugins -amd -B
       - name: Cat minikube logs
         if: failure()
         run: |
