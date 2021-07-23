@@ -40,7 +40,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         }
     }
 
-
+/*
     @Test
     public void testK8sStartSuccessful() throws InterpreterException {
         // given
@@ -57,20 +57,20 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         InterpreterResult interpreterResult = interpreter.interpret("pwd", context);
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
     }
+*/
 
 
-/*
     @Test
     public void testK8sStartSparkSuccessful() throws InterpreterException {
         // given
         InterpreterSetting interpreterSetting = interpreterSettingManager.getInterpreterSettingByName("spark");
-        interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.image", "local/zeppelin:latest");
+        interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.image", "local/zeppelin");
         interpreterSetting.setProperty("ZEPPELIN_CONF_DIR", "/opt/zeppelin/conf");
         interpreterSetting.setProperty("ZEPPELIN_HOME", "/opt/zeppelin");
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.imagePullPolicy", "Never");
 
         interpreterSetting.setProperty("zeppelin.k8s.spark.container.imagePullPolicy", "Never");
-        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "local/spark:latest");
+        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4");
         interpreterSetting.setProperty("SPARK_HOME", "/spark");
         interpreterSetting.setProperty("spark.master", "k8s://https://kubernetes.default.svc");
         interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
@@ -104,10 +104,9 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         InterpreterResult interpreterResult = interpreter.interpret("sc.range(1,10).sum()", context);
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
         assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("45"));
-
     }
 
- */
+
 /*
     @Test
     public void testK8sStartFailed() {
