@@ -90,8 +90,8 @@ jobs:
       - name: prepare docker images
         run: |
           eval $(minikube -p minikube docker-env)
-          docker pull datamechanics/spark:2.4.5-hadoop-3.1.0-java-8-scala-2.11-python-3.7-latest
-          docker tag datamechanics/spark:2.4.5-hadoop-3.1.0-java-8-scala-2.11-python-3.7-latest local/spark
+          docker pull registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4
+          docker tag registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4 local/spark
           mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
           docker build --progress=plain -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin ./scripts/docker/zeppelin/build-from-distribution/
           echo -n "verifying images:"
