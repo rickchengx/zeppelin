@@ -17,7 +17,7 @@ env:
       -Dmaven.wagon.http.retryHandler.count=3
   ZEPPELIN_HELIUM_REGISTRY: helium
   SPARK_PRINT_LAUNCH_COMMAND: "true"
-  SPARK_LOCAL_IP: 127.0.0.1
+  #SPARK_LOCAL_IP: 127.0.0.1
   #ZEPPELIN_LOCAL_IP: 127.0.0.1
 
 # Use the bash login, because we are using miniconda
@@ -40,37 +40,37 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 8
-      - name: install socat
+      - name: Install socat (For Minikube to use port-forwarding)
         run: sudo apt-get -y install socat
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.m2/repository
-            !~/.m2/repository/org/apache/zeppelin/
-          key: ${{ runner.os }}-zeppelin-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-zeppelin-
-      - name: Setup conda environment with python 3.7 and R
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          activate-environment: python_3_with_R
-          environment-file: testing/env_python_3_with_R.yml
-          python-version: 3.7
-          auto-activate-base: false
-          channel-priority: strict
-      - name: Make IRkernel available to Jupyter
-        run: |
-          R -e "IRkernel::installspec()"
-          conda list
-          conda info
-      - name: build the final distribution
-        run: |
-          mvn install -DskipRat -DskipTests -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -B
-          mvn package -DskipRat -DskipTests -pl zeppelin-plugins -amd -B
-          mvn package -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-distribution -am -Pbuild-distr
-      - name: check the final distribution
-        run: ls -l zeppelin-distribution/target
+#      - name: Cache local Maven repository
+#        uses: actions/cache@v2
+#        with:
+#          path: |
+#            ~/.m2/repository
+#            !~/.m2/repository/org/apache/zeppelin/
+#          key: ${{ runner.os }}-zeppelin-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-zeppelin-
+#      - name: Setup conda environment with python 3.7 and R
+#        uses: conda-incubator/setup-miniconda@v2
+#        with:
+#          activate-environment: python_3_with_R
+#          environment-file: testing/env_python_3_with_R.yml
+#          python-version: 3.7
+#          auto-activate-base: false
+#          channel-priority: strict
+#      - name: Make IRkernel available to Jupyter
+#        run: |
+#          R -e "IRkernel::installspec()"
+#          conda list
+#          conda info
+#      - name: build the final distribution
+#        run: |
+#          mvn install -DskipRat -DskipTests -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -B
+#          mvn package -DskipRat -DskipTests -pl zeppelin-plugins -amd -B
+#          mvn package -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-distribution -am -Pbuild-distr
+#      - name: check the final distribution
+#        run: ls -l zeppelin-distribution/target
       - name: set up and start minikube cluster
         #uses: medyagh/setup-minikube@master
         uses: manusa/actions-setup-minikube@v2.4.2
@@ -90,8 +90,7 @@ jobs:
       - name: build docker image
         run: |
           eval $(minikube -p minikube docker-env)
-          mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
-          docker build --progress=plain -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin ./scripts/docker/zeppelin/build-from-distribution/
+          docker pull docker pull bitnami/spark:3.1.2
           echo -n "verifying images:"
           docker images
       - name: mvn testing
