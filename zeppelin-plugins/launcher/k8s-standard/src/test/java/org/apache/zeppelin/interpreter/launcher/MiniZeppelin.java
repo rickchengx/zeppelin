@@ -44,7 +44,7 @@ public class MiniZeppelin {
         conf = ZeppelinConfiguration.create();
         conf.setRunMode(ZeppelinConfiguration.RUN_MODE.K8S);
         conf.setProperty("zeppelin.k8s.portforward", "true");
-        conf.setProperty("zeppelin.k8s.spark.container.image", "registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4");
+        conf.setProperty("zeppelin.k8s.spark.container.image", "local/spark");
         conf.setProperty("zeppelin.interpreter.connect.timeout", "600000");
 
         interpreterSettingManager = new InterpreterSettingManager(conf,

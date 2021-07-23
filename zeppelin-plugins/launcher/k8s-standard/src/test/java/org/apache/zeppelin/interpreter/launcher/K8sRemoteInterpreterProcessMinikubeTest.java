@@ -40,7 +40,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         }
     }
 
-/*
+
     @Test
     public void testK8sStartSuccessful() throws InterpreterException {
         // given
@@ -57,7 +57,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         InterpreterResult interpreterResult = interpreter.interpret("pwd", context);
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
     }
-*/
+
 
 
     @Test
@@ -70,7 +70,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.imagePullPolicy", "Never");
 
         interpreterSetting.setProperty("zeppelin.k8s.spark.container.imagePullPolicy", "Never");
-        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4");
+        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "local/spark");
         interpreterSetting.setProperty("SPARK_HOME", "/spark");
         interpreterSetting.setProperty("spark.master", "k8s://https://kubernetes.default.svc");
         interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
