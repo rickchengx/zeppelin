@@ -84,11 +84,16 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.spark.useHiveContext", "false");
         interpreterSetting.setProperty("zeppelin.pyspark.useIPython", "false");
         interpreterSetting.setProperty("spark.driver.memory", "1g");
-        interpreterSetting.setProperty("spark.driver.cores", "1");
 
-        interpreterSetting.setProperty("spark.executor.cores", "1");
+
+        interpreterSetting.setProperty("spark.driver.cores", "500m");
+        interpreterSetting.setProperty("spark.kubernetes.driver.request.cores", "500m");
+
+        //interpreterSetting.setProperty("spark.executor.cores", "1");
         interpreterSetting.setProperty("spark.executor.memory", "1g");
         interpreterSetting.setProperty("spark.executor.instances", "1");
+
+        interpreterSetting.setProperty("spark.kubernetes.executor.request.cores","500m");
 
         interpreterSetting.setProperty("zeppelin.spark.scala.color", "false");
         interpreterSetting.setProperty("zeppelin.spark.deprecatedMsg.show", "false");
