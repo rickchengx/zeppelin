@@ -40,47 +40,9 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         }
     }
 
-    /*
-    @Test
-    public void testPredefinedPortNumbers() {
-        // given
-        KubernetesClient client = new DefaultKubernetesClient();
-        Properties properties = new Properties();
-        Map<String, String> envs = new HashMap<>();
-
-        K8sRemoteInterpreterProcess intp = new K8sRemoteInterpreterProcess(
-                client,
-                "default",
-                new File(".skip"),
-                "interpreter-container:1.0",
-                "shared_process",
-                "sh",
-                "shell",
-                properties,
-                envs,
-                "zeppelin.server.hostname",
-                12320,
-                false,
-                "spark-container:1.0",
-                10,
-                10,
-                false,
-                false);
-
-
-        // following values are hardcoded in k8s/interpreter/100-interpreter.yaml.
-        // when change those values, update the yaml file as well.
-        assertEquals("12321:12321", intp.getInterpreterPortRange());
-        assertEquals(22321, intp.getSparkDriverPort());
-        assertEquals(22322, intp.getSparkBlockManagerPort());
-    }
-
-     */
-
-
 
     @Test
-    public void testK8sStartSuccessful() throws IOException, InterpreterNotFoundException, InterpreterException {
+    public void testK8sStartSuccessful() throws InterpreterException {
         // given
         InterpreterSetting interpreterSetting = interpreterSettingManager.getInterpreterSettingByName("sh");
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.image", "local/zeppelin");
@@ -89,7 +51,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.imagePullPolicy", "Never");
 
         // test shell interpreter
-        Interpreter interpreter = interpreterFactory.getInterpreter("sh", new ExecutionContext("anonymous", "note1", "test"));
+        Interpreter interpreter = interpreterFactory.getInterpreter("sh", new ExecutionContext("user1", "note1", "test"));
 
         InterpreterContext context = new InterpreterContext.Builder().setNoteId("note1").setParagraphId("paragraph_1").build();
         InterpreterResult interpreterResult = interpreter.interpret("pwd", context);
@@ -97,9 +59,9 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
     }
 
 
-/*
+
     @Test
-    public void testK8sStartSparkSuccessful() throws IOException, InterpreterNotFoundException, InterpreterException {
+    public void testK8sStartSparkSuccessful() throws InterpreterException {
         // given
         InterpreterSetting interpreterSetting = interpreterSettingManager.getInterpreterSettingByName("spark");
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.image", "local/zeppelin");
@@ -108,7 +70,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.imagePullPolicy", "Never");
 
         interpreterSetting.setProperty("zeppelin.k8s.spark.container.imagePullPolicy", "Never");
-        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4");
+        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "local/spark");
         interpreterSetting.setProperty("SPARK_HOME", "/spark");
         interpreterSetting.setProperty("spark.master", "k8s://https://kubernetes.default.svc");
         interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
@@ -127,7 +89,6 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("spark.executor.cores", "1");
         interpreterSetting.setProperty("spark.executor.memory", "1g");
 
-        //interpreterSetting.setProperty("spark.executor.memoryOverhead", "5g");
         interpreterSetting.setProperty("zeppelin.spark.scala.color", "false");
         interpreterSetting.setProperty("zeppelin.spark.deprecatedMsg.show", "false");
 
@@ -136,21 +97,14 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         // test shell interpreter
         Interpreter interpreter = interpreterFactory.getInterpreter("spark.spark", new ExecutionContext("user1", "note1", "test"));
 
-
         InterpreterContext context = new InterpreterContext.Builder().setNoteId("note1").setParagraphId("paragraph_1").build();
-
-        //InterpreterResult interpreterResult = interpreter.interpret("sc.version", context);
-        //assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
-
-
-
 
         InterpreterResult interpreterResult = interpreter.interpret("sc.range(1,10).sum()", context);
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
         assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("45"));
 
     }
-*/
+
 
 
 
