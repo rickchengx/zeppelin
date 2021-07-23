@@ -90,7 +90,7 @@ jobs:
       - name: build docker image
         run: |
           eval $(minikube -p minikube docker-env)
-          docker pull docker pull bitnami/spark:3.1.2
+          docker pull bitnami/spark:3.1.2
           echo -n "verifying images:"
           docker images
       - name: mvn testing
