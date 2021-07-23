@@ -78,8 +78,8 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("spark.kubernetes.container.image.pullPolicy", "Never");
         interpreterSetting.setProperty("SPARK_PRINT_LAUNCH_COMMAND", "true");
 
-        interpreterSetting.setProperty("spark.user.name", "#{user}");
-        interpreterSetting.setProperty("zeppelin.spark.run.asLoginUser", "false");
+        //interpreterSetting.setProperty("spark.user.name", "#{user}");
+        //interpreterSetting.setProperty("zeppelin.spark.run.asLoginUser", "false");
 
         interpreterSetting.setProperty("zeppelin.spark.useHiveContext", "false");
         interpreterSetting.setProperty("zeppelin.pyspark.useIPython", "false");
@@ -93,7 +93,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.spark.scala.color", "false");
         interpreterSetting.setProperty("zeppelin.spark.deprecatedMsg.show", "false");
 
-        interpreterSetting.setProperty("spark.executor.heartbeatInterval", "100s");
+        //interpreterSetting.setProperty("spark.executor.heartbeatInterval", "100s");
 
 
         // test shell interpreter
