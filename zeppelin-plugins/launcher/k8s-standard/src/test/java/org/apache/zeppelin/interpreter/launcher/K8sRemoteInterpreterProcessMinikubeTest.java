@@ -98,10 +98,9 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.spark.scala.color", "false");
         interpreterSetting.setProperty("zeppelin.spark.deprecatedMsg.show", "false");
 
-        //interpreterSetting.setProperty("spark.executor.heartbeatInterval", "100s");
+        interpreterSetting.setProperty("spark.jars.packages", "com.maxmind.geoip2:geoip2:2.5.0");
 
-
-        // test shell interpreter
+        // test spark interpreter
         Interpreter interpreter = interpreterFactory.getInterpreter("spark.spark", new ExecutionContext("user1", "note1", "test"));
 
         InterpreterContext context = new InterpreterContext.Builder().setNoteId("note1").setParagraphId("paragraph_1").build();
@@ -109,6 +108,29 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         InterpreterResult interpreterResult = interpreter.interpret("sc.range(1,10).sum()", context);
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
         assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("45"));
+
+
+        // test jars & packages can be loaded correctly
+        interpreterResult = interpreter.interpret("import org.apache.zeppelin.interpreter.integration.DummyClass\n" +
+                "import com.maxmind.geoip2._", context);
+        assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
+
+        // test PySparkInterpreter
+        Interpreter pySparkInterpreter = interpreterFactory.getInterpreter("spark.pyspark", new ExecutionContext("user1", "note1", "test"));
+        interpreterResult = pySparkInterpreter.interpret("sqlContext.createDataFrame([(1,'a'),(2,'b')], ['id','name']).registerTempTable('test')", context);
+        assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
+
+        // test IPySparkInterpreter
+        Interpreter ipySparkInterpreter = interpreterFactory.getInterpreter("spark.ipyspark", new ExecutionContext("user1", "note1", "test"));
+        interpreterResult = ipySparkInterpreter.interpret("sqlContext.table('test').show()", context);
+        assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
+
+        // test SparkSQLInterpreter
+        Interpreter sqlInterpreter = interpreterFactory.getInterpreter("spark.sql", new ExecutionContext("user1", "note1", "test"));
+        interpreterResult = sqlInterpreter.interpret("select count(1) as c from test", context);
+        assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
+        assertEquals(interpreterResult.toString(), InterpreterResult.Type.TABLE, interpreterResult.message().get(0).getType());
+        assertEquals(interpreterResult.toString(), "c\n2\n", interpreterResult.message().get(0).getData());
     }
 
 
