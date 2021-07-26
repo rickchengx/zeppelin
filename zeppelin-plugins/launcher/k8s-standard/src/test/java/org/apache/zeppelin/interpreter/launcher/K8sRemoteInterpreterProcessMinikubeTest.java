@@ -82,7 +82,9 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("spark.master", "k8s://https://kubernetes.default.svc");
         interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
 
-        interpreterSetting.setProperty("PYSPARK_PYTHON", "/usr/share/miniconda/envs/python_3_with_R/bin/python");
+        //interpreterSetting.setProperty("PYSPARK_PYTHON", getPythonExec());
+        interpreterSetting.setProperty("spark.pyspark.python", "python3");
+        interpreterSetting.setProperty("spark.pyspark.driver.python", getPythonExec());
 
         System.out.println("rick python exec: " + getPythonExec());
 
