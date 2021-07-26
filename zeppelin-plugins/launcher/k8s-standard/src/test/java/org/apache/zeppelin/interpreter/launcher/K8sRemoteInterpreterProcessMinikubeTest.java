@@ -122,7 +122,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterResult = pySparkInterpreter.interpret("sqlContext.createDataFrame([(1,'a'),(2,'b')], ['id','name']).registerTempTable('test')", context);
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
 
-        /*
+
         // test IPySparkInterpreter
         Interpreter ipySparkInterpreter = interpreterFactory.getInterpreter("spark.ipyspark", new ExecutionContext("user1", "note1", "test"));
         interpreterResult = ipySparkInterpreter.interpret("sqlContext.table('test').show()", context);
@@ -135,7 +135,6 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         assertEquals(interpreterResult.toString(), InterpreterResult.Type.TABLE, interpreterResult.message().get(0).getType());
         assertEquals(interpreterResult.toString(), "c\n2\n", interpreterResult.message().get(0).getData());
 
-         */
     }
 
 
