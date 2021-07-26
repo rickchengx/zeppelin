@@ -78,13 +78,9 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("spark.kubernetes.container.image.pullPolicy", "Never");
         interpreterSetting.setProperty("SPARK_PRINT_LAUNCH_COMMAND", "true");
 
-        //interpreterSetting.setProperty("spark.user.name", "#{user}");
-        //interpreterSetting.setProperty("zeppelin.spark.run.asLoginUser", "false");
-
         interpreterSetting.setProperty("zeppelin.spark.useHiveContext", "false");
         interpreterSetting.setProperty("zeppelin.pyspark.useIPython", "false");
         interpreterSetting.setProperty("spark.driver.memory", "1g");
-
 
         interpreterSetting.setProperty("spark.driver.cores", "500m");
         interpreterSetting.setProperty("spark.kubernetes.driver.request.cores", "500m");
@@ -98,7 +94,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.spark.scala.color", "false");
         interpreterSetting.setProperty("zeppelin.spark.deprecatedMsg.show", "false");
 
-        interpreterSetting.setProperty("spark.jars.packages", "com.maxmind.geoip2:geoip2:2.5.0");
+        //interpreterSetting.setProperty("spark.jars.packages", "com.maxmind.geoip2:geoip2:2.5.0");
 
         // test spark interpreter
         Interpreter interpreter = interpreterFactory.getInterpreter("spark.spark", new ExecutionContext("user1", "note1", "test"));
@@ -111,9 +107,9 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
 
 
         // test jars & packages can be loaded correctly
-        interpreterResult = interpreter.interpret("import org.apache.zeppelin.interpreter.integration.DummyClass\n" +
-                "import com.maxmind.geoip2._", context);
-        assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
+        //interpreterResult = interpreter.interpret("import org.apache.zeppelin.interpreter.integration.DummyClass\n" +
+        //        "import com.maxmind.geoip2._", context);
+        //assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
 
         // test PySparkInterpreter
         Interpreter pySparkInterpreter = interpreterFactory.getInterpreter("spark.pyspark", new ExecutionContext("user1", "note1", "test"));
