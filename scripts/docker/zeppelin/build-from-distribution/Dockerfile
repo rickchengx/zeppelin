@@ -36,6 +36,32 @@ RUN echo "$LOG_TAG install basic packages" && \
     apt-get clean
 
 
+# Install conda to manage python and R packages
+ARG miniconda_version="py37_4.9.2"
+# Hashes via https://docs.conda.io/en/latest/miniconda_hashes.html
+ARG miniconda_sha256="79510c6e7bd9e012856e25dcb21b3e093aa4ac8113d9aa7e82a86987eabe1c31"
+# Install python and R packages via conda
+COPY env_python_3_with_R.yml /env_python_3_with_R.yml
+RUN set -ex && \
+    wget -nv https://repo.anaconda.com/miniconda/Miniconda3-${miniconda_version}-Linux-x86_64.sh -O miniconda.sh && \
+    echo "${miniconda_sha256} miniconda.sh" > anaconda.sha256 && \
+    sha256sum --strict -c anaconda.sha256 && \
+    bash miniconda.sh -b -p /opt/conda && \
+    export PATH=/opt/conda/bin:$PATH && \
+    conda config --set always_yes yes --set changeps1 no && \
+    conda info -a && \
+    conda install mamba -c conda-forge && \
+    mamba env update -f /env_python_3_with_R.yml --prune && \
+    # Cleanup
+    rm -v miniconda.sh anaconda.sha256  && \
+    # Cleanup based on https://github.com/ContinuumIO/docker-images/commit/cac3352bf21a26fa0b97925b578fb24a0fe8c383
+    find /opt/conda/ -follow -type f -name '*.a' -delete && \
+    find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
+    mamba clean -ay
+    # Allow to modify conda packages. This allows malicious code to be injected into other interpreter sessions, therefore it is disabled by default
+    # chmod -R ug+rwX /opt/conda
+ENV PATH /opt/conda/envs/python_3_with_R/bin:/opt/conda/bin:$PATH
+
 # RUN echo "$LOG_TAG Download Zeppelin binary" && \
 #     mkdir -p ${ZEPPELIN_HOME} && \
 #     wget -nv -O /tmp/zeppelin-${Z_VERSION}-bin-all.tgz https://archive.apache.org/dist/zeppelin/zeppelin-${Z_VERSION}/zeppelin-${Z_VERSION}-bin-all.tgz && \
