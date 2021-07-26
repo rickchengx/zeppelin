@@ -61,8 +61,7 @@ jobs:
           channel-priority: strict
       - name: verify python
         run: |
-          - python3
-          - python
+          - which python
 #      - name: Make IRkernel available to Jupyter
 #        run: |
 #          R -e "IRkernel::installspec()"
