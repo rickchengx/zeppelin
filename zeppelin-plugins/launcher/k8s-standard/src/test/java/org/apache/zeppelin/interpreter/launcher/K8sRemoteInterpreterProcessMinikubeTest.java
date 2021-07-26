@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+
 import static org.junit.Assert.*;
 
 
@@ -81,7 +82,9 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("spark.master", "k8s://https://kubernetes.default.svc");
         interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
 
-        interpreterSetting.setProperty("PYSPARK_PYTHON", getPythonExec());
+        interpreterSetting.setProperty("PYSPARK_PYTHON", "/usr/share/miniconda/envs/python_3_with_R/bin/python");
+
+        System.out.println("rick python exec: " + getPythonExec());
 
         interpreterSetting.setProperty("spark.kubernetes.container.image.pullPolicy", "Never");
         interpreterSetting.setProperty("SPARK_PRINT_LAUNCH_COMMAND", "true");
