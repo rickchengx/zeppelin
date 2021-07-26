@@ -35,6 +35,24 @@ RUN echo "$LOG_TAG install basic packages" && \
     apt-get autoclean && \
     apt-get clean
 
+# RUN echo "$LOG_TAG Download Zeppelin binary" && \
+#     mkdir -p ${ZEPPELIN_HOME} && \
+#     wget -nv -O /tmp/zeppelin-${Z_VERSION}-bin-all.tgz https://archive.apache.org/dist/zeppelin/zeppelin-${Z_VERSION}/zeppelin-${Z_VERSION}-bin-all.tgz && \
+#     tar --strip-components=1 -zxvf  /tmp/zeppelin-${Z_VERSION}-bin-all.tgz -C ${ZEPPELIN_HOME} && \
+#     rm -f /tmp/zeppelin-${Z_VERSION}-bin-all.tgz && \
+
+ADD zeppelin-${Z_VERSION}.tar.gz /
+RUN mv /zeppelin-${Z_VERSION} ${ZEPPELIN_HOME} && \
+    chown -R root:root ${ZEPPELIN_HOME} && \
+    mkdir -p ${ZEPPELIN_HOME}/logs ${ZEPPELIN_HOME}/run ${ZEPPELIN_HOME}/webapps && \
+    # Allow process to edit /etc/passwd, to create a user entry for zeppelin
+    chgrp root /etc/passwd && chmod ug+rw /etc/passwd && \
+    # Give access to some specific folders
+    chmod -R 775 "${ZEPPELIN_HOME}/logs" "${ZEPPELIN_HOME}/run" "${ZEPPELIN_HOME}/notebook" "${ZEPPELIN_HOME}/conf" && \
+    # Allow process to create new folders (e.g. webapps)
+    chmod 775 ${ZEPPELIN_HOME}
+
+
 
 # Install conda to manage python and R packages
 ARG miniconda_version="py37_4.9.2"
@@ -61,23 +79,6 @@ RUN set -ex && \
     # Allow to modify conda packages. This allows malicious code to be injected into other interpreter sessions, therefore it is disabled by default
     # chmod -R ug+rwX /opt/conda
 ENV PATH /opt/conda/envs/python_3_with_R/bin:/opt/conda/bin:$PATH
-
-# RUN echo "$LOG_TAG Download Zeppelin binary" && \
-#     mkdir -p ${ZEPPELIN_HOME} && \
-#     wget -nv -O /tmp/zeppelin-${Z_VERSION}-bin-all.tgz https://archive.apache.org/dist/zeppelin/zeppelin-${Z_VERSION}/zeppelin-${Z_VERSION}-bin-all.tgz && \
-#     tar --strip-components=1 -zxvf  /tmp/zeppelin-${Z_VERSION}-bin-all.tgz -C ${ZEPPELIN_HOME} && \
-#     rm -f /tmp/zeppelin-${Z_VERSION}-bin-all.tgz && \
-
-ADD zeppelin-${Z_VERSION}.tar.gz /
-RUN mv /zeppelin-${Z_VERSION} ${ZEPPELIN_HOME} && \
-    chown -R root:root ${ZEPPELIN_HOME} && \
-    mkdir -p ${ZEPPELIN_HOME}/logs ${ZEPPELIN_HOME}/run ${ZEPPELIN_HOME}/webapps && \
-    # Allow process to edit /etc/passwd, to create a user entry for zeppelin
-    chgrp root /etc/passwd && chmod ug+rw /etc/passwd && \
-    # Give access to some specific folders
-    chmod -R 775 "${ZEPPELIN_HOME}/logs" "${ZEPPELIN_HOME}/run" "${ZEPPELIN_HOME}/notebook" "${ZEPPELIN_HOME}/conf" && \
-    # Allow process to create new folders (e.g. webapps)
-    chmod 775 ${ZEPPELIN_HOME}
 
 COPY log4j.properties ${ZEPPELIN_HOME}/conf/
 COPY log4j_docker.properties ${ZEPPELIN_HOME}/conf/
