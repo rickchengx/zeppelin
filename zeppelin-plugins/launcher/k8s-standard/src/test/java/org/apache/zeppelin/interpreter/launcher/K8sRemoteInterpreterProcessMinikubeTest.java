@@ -3,6 +3,7 @@ package org.apache.zeppelin.interpreter.launcher;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.zeppelin.interpreter.*;
@@ -66,7 +67,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
 
 
     @Test
-    public void testK8sStartSparkSuccessful() throws IOException, XmlPullParserException, InterpreterException {
+    public void testK8sStartSparkSuccessful() throws IOException, InterruptedException, XmlPullParserException, InterpreterException {
         // given
         InterpreterSetting interpreterSetting = interpreterSettingManager.getInterpreterSettingByName("spark");
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.image", "local/zeppelin");
@@ -79,6 +80,8 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("SPARK_HOME", "/spark");
         interpreterSetting.setProperty("spark.master", "k8s://https://kubernetes.default.svc");
         interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
+
+        interpreterSetting.setProperty("PYSPARK_PYTHON", getPythonExec());
 
         interpreterSetting.setProperty("spark.kubernetes.container.image.pullPolicy", "Never");
         interpreterSetting.setProperty("SPARK_PRINT_LAUNCH_COMMAND", "true");
@@ -99,11 +102,6 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.spark.scala.color", "false");
         interpreterSetting.setProperty("zeppelin.spark.deprecatedMsg.show", "false");
 
-        MavenXpp3Reader reader = new MavenXpp3Reader();
-        Model model = reader.read(new FileReader("pom.xml"));
-        interpreterSetting.setProperty("spark.jars", new File("target/zeppelin-interpreter-integration-" + model.getVersion() + ".jar").getAbsolutePath());
-        interpreterSetting.setProperty("spark.jars.packages", "com.maxmind.geoip2:geoip2:2.5.0");
-
         // test spark interpreter
         Interpreter interpreter = interpreterFactory.getInterpreter("spark.spark", new ExecutionContext("user1", "note1", "test"));
 
@@ -112,12 +110,6 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         InterpreterResult interpreterResult = interpreter.interpret("sc.range(1,10).sum()", context);
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
         assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("45"));
-
-
-        // test jars & packages can be loaded correctly
-        interpreterResult = interpreter.interpret("import org.apache.zeppelin.interpreter.integration.DummyClass\n" +
-                "import com.maxmind.geoip2._", context);
-        assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
 
         // test PySparkInterpreter
         Interpreter pySparkInterpreter = interpreterFactory.getInterpreter("spark.pyspark", new ExecutionContext("user1", "note1", "test"));
@@ -189,4 +181,11 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
     }
 */
 
+    private String getPythonExec() throws IOException, InterruptedException {
+        Process process = Runtime.getRuntime().exec(new String[]{"which", "python"});
+        if (process.waitFor() != 0) {
+            throw new RuntimeException("Fail to run command: which python.");
+        }
+        return IOUtils.toString(process.getInputStream()).trim();
+    }
 }
