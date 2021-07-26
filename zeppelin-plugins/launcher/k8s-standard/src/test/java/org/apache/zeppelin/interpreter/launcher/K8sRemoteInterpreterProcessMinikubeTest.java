@@ -84,7 +84,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
 
         //interpreterSetting.setProperty("PYSPARK_PYTHON", getPythonExec());
         interpreterSetting.setProperty("spark.pyspark.python", "python3");
-        interpreterSetting.setProperty("spark.pyspark.driver.python", getPythonExec());
+        //interpreterSetting.setProperty("spark.pyspark.driver.python", getPythonExec());
 
         System.out.println("rick python exec: " + getPythonExec());
 
