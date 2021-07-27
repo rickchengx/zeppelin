@@ -82,6 +82,9 @@ jobs:
           mv /opt/spark-* /opt/spark
           export SPARK_HOME=/opt/spark
           cd /opt/spark/
+          # change the kerserver keys.gnupg.net to keyserver.ubuntu.com (https://github.com/apache/spark/pull/33071)
+          sed 's/keys.gnupg.net/keyserver.ubuntu.com/g' ./kubernetes/dockerfiles/spark/bindings/R/Dockerfile
+          cat ./kubernetes/dockerfiles/spark/bindings/R/Dockerfile
           ./bin/docker-image-tool.sh -r local -t latest -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
           ./bin/docker-image-tool.sh -r local -t latest -R ./kubernetes/dockerfiles/spark/bindings/R/Dockerfile build
           echo -n "verifying images:"
