@@ -83,11 +83,10 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
 
         interpreterSetting.setProperty("PYSPARK_PYTHON", "python3");
-        interpreterSetting.setProperty("PYSPARK_DRIVER_PYTHON", "python3");
-        interpreterSetting.setProperty("spark.pyspark.python", "python3");
-        interpreterSetting.setProperty("spark.pyspark.driver.python", "python3");
+        //interpreterSetting.setProperty("PYSPARK_DRIVER_PYTHON", "python3");
+        //interpreterSetting.setProperty("spark.pyspark.python", "python3");
+        //interpreterSetting.setProperty("spark.pyspark.driver.python", "python3");
 
-        System.out.println("rick python exec: " + getPythonExec());
 
         interpreterSetting.setProperty("spark.kubernetes.container.image.pullPolicy", "Never");
         interpreterSetting.setProperty("SPARK_PRINT_LAUNCH_COMMAND", "true");
