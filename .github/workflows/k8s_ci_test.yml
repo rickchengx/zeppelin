@@ -59,22 +59,22 @@ jobs:
 #          mvn package -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-distribution -am -Pbuild-distr
 #      - name: check the final distribution
 #        run: ls -l zeppelin-distribution/target
-#      - name: set up and start minikube cluster
-#        #uses: medyagh/setup-minikube@master
-#        uses: manusa/actions-setup-minikube@v2.4.2
-#        with:
-#          minikube version: 'v1.16.0'
-#          kubernetes version: 'v1.19.2'
-#      - name: verify minikube
-#        run: |
-#          env
-#          # wait for the minikube to start
-#          sleep 2m
-#          kubectl get pods -A
-#          kubectl cluster-info
-#          kubectl describe nodes
-#      - name: switch docker daemon
-#        run: eval $(minikube -p minikube docker-env)
+      - name: set up and start minikube cluster
+        #uses: medyagh/setup-minikube@master
+        uses: manusa/actions-setup-minikube@v2.4.2
+        with:
+          minikube version: 'v1.16.0'
+          kubernetes version: 'v1.19.2'
+      - name: verify minikube
+        run: |
+          env
+          # wait for the minikube to start
+          sleep 2m
+          kubectl get pods -A
+          kubectl cluster-info
+          kubectl describe nodes
+      - name: switch docker daemon
+        run: eval $(minikube -p minikube docker-env)
       - name: download spark
         run: |
           wget -O ~/spark.tgz https://downloads.apache.org/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz
@@ -82,6 +82,9 @@ jobs:
           mv /opt/spark-* /opt/spark
           export SPARK_HOME=/opt/spark
           ls -l /opt/spark
+          cd /opt/spark/
+          ./bin/docker/image-tool.sh -r local -t latest -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
+          docker images
 #      - name: prepare docker images
 #        run: |
 #          eval $(minikube -p minikube docker-env)
