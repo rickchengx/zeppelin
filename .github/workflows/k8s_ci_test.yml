@@ -83,6 +83,7 @@ jobs:
           export SPARK_HOME=/opt/spark
           cd /opt/spark/
           ./bin/docker-image-tool.sh -r local -t latest -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
+          ./bin/docker-image-tool.sh -r local -t latest -R ./kubernetes/dockerfiles/spark/bindings/R/Dockerfile build
           echo -n "verifying images:"
           docker images
       - name: build zeppelin docker images
