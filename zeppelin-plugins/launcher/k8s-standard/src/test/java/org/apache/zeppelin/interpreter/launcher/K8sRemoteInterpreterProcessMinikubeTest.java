@@ -77,7 +77,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.imagePullPolicy", "Never");
 
         interpreterSetting.setProperty("zeppelin.k8s.spark.container.imagePullPolicy", "Never");
-        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "local/spark");
+        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "local/spark-py:latest");
         interpreterSetting.setProperty("SPARK_HOME", "/spark");
         interpreterSetting.setProperty("spark.master", "k8s://https://kubernetes.default.svc");
         interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
