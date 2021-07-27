@@ -81,9 +81,10 @@ jobs:
           tar -zxvf ~/spark.tgz -C /opt
           mv /opt/spark-* /opt/spark
           export SPARK_HOME=/opt/spark
-          ls -l /opt/spark
+          ls -l /opt/spark/bin
           cd /opt/spark/
-          ./bin/docker/image-tool.sh -r local -t latest -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
+          ls -l
+          ./bin/docker-image-tool.sh -r local -t latest -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
           docker images
 #      - name: prepare docker images
 #        run: |
