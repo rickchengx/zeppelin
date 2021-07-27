@@ -37,7 +37,7 @@ public class K8sMinikubeTests {
 
 
     @Test
-    public void testK8sStartSuccessful() throws InterpreterException {
+    public void testK8sStartShellSuccessful() throws InterpreterException {
         // given
         InterpreterSetting interpreterSetting = interpreterSettingManager.getInterpreterSettingByName("sh");
         interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.image", "local/zeppelin");
@@ -51,6 +51,25 @@ public class K8sMinikubeTests {
         InterpreterContext context = new InterpreterContext.Builder().setNoteId("note1").setParagraphId("paragraph_1").build();
         InterpreterResult interpreterResult = interpreter.interpret("pwd", context);
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
+    }
+
+    @Test
+    public void testK8sStartPythonSuccessful() throws InterpreterException {
+        // given
+        InterpreterSetting interpreterSetting = interpreterSettingManager.getInterpreterSettingByName("python");
+        interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.image", "local/zeppelin");
+        interpreterSetting.setProperty("ZEPPELIN_CONF_DIR", "/opt/zeppelin/conf");
+        interpreterSetting.setProperty("ZEPPELIN_HOME", "/opt/zeppelin");
+        interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.imagePullPolicy", "Never");
+        interpreterSetting.setProperty("zeppelin.python", "python3");
+
+        // test shell interpreter
+        Interpreter interpreter = interpreterFactory.getInterpreter("python", new ExecutionContext("user1", "note1", "test"));
+
+        InterpreterContext context = new InterpreterContext.Builder().setNoteId("note1").setParagraphId("paragraph_1").build();
+        InterpreterResult interpreterResult = interpreter.interpret("foo = True\nprint(foo)", context);
+        assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
+        assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("True"));
     }
 
 
@@ -119,7 +138,7 @@ public class K8sMinikubeTests {
     }
 
 
-
+    /*
     @Test
     public void testK8sStartSparkRSuccessful() throws IOException, InterruptedException, XmlPullParserException, InterpreterException {
         // given
@@ -163,4 +182,5 @@ public class K8sMinikubeTests {
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
         assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("TRUE"));
     }
+     */
 }
