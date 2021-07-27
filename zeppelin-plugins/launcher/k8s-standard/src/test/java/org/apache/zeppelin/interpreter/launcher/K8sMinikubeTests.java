@@ -119,62 +119,48 @@ public class K8sMinikubeTests {
     }
 
 
-/*
+
     @Test
-    public void testK8sStartFailed() {
+    public void testK8sStartSparkRSuccessful() throws IOException, InterruptedException, XmlPullParserException, InterpreterException {
         // given
-        KubernetesClient client = new DefaultKubernetesClient();
-        Properties properties = new Properties();
-        Map<String, String> envs = new HashMap<>();
-        envs.put("SERVICE_DOMAIN", "mydomain");
-        envs.put("ZEPPELIN_HOME", "/opt/zeppelin/");
-        URL url = Thread.currentThread().getContextClassLoader()
-                .getResource("k8s-specs/interpreter-spec-ci-minikube.yaml");
-        File file = new File(url.getPath());
+        InterpreterSetting interpreterSetting = interpreterSettingManager.getInterpreterSettingByName("spark");
+        interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.image", "local/zeppelin");
+        interpreterSetting.setProperty("ZEPPELIN_CONF_DIR", "/opt/zeppelin/conf");
+        interpreterSetting.setProperty("ZEPPELIN_HOME", "/opt/zeppelin");
+        interpreterSetting.setProperty("zeppelin.k8s.interpreter.container.imagePullPolicy", "Never");
 
-        K8sRemoteInterpreterProcess intp = new K8sRemoteInterpreterProcess(
-                client,
-                "default",
-                file,
-                "local/zeppelin",
-                "shared_process",
-                "spark",
-                "myspark",
-                properties,
-                envs,
-                "zeppelin.server.service",
-                12320,
-                false,
-                "spark-container:1.0",
-                3000,
-                10,
-                false,
-                true);
+        interpreterSetting.setProperty("zeppelin.k8s.spark.container.imagePullPolicy", "Never");
+        interpreterSetting.setProperty("zeppelin.k8s.spark.container.image", "local/spark-r:latest");
+        interpreterSetting.setProperty("SPARK_HOME", "/spark");
+        interpreterSetting.setProperty("spark.master", "k8s://https://kubernetes.default.svc");
+        interpreterSetting.setProperty("zeppelin.spark.enableSupportedVersionCheck", "false");
 
+        interpreterSetting.setProperty("PYSPARK_PYTHON", "python3");
 
+        interpreterSetting.setProperty("spark.kubernetes.container.image.pullPolicy", "Never");
+        interpreterSetting.setProperty("SPARK_PRINT_LAUNCH_COMMAND", "true");
 
-        ExecutorService service = Executors.newFixedThreadPool(1);
-        service.submit(new PodStatusChecker(client, intp.getNamespace(), intp.getPodName(), intp));
+        interpreterSetting.setProperty("zeppelin.spark.useHiveContext", "false");
+        interpreterSetting.setProperty("zeppelin.pyspark.useIPython", "false");
+        interpreterSetting.setProperty("spark.driver.memory", "1g");
 
-        // should throw an IOException
-        try {
-            intp.start("TestUser");
-            fail("We excepting an IOException");
-        } catch (IOException e) {
-            assertNotNull(e);
-            // Check that the Pod is deleted
-            assertNull(
-                    server.getClient().pods().inNamespace(intp.getNamespace()).withName(intp.getPodName())
-                            .get());
-        }
-    }
-*/
+        interpreterSetting.setProperty("spark.driver.cores", "500m");
+        interpreterSetting.setProperty("spark.kubernetes.driver.request.cores", "500m");
 
-    private String getPythonExec() throws IOException, InterruptedException {
-        Process process = Runtime.getRuntime().exec(new String[]{"which", "python"});
-        if (process.waitFor() != 0) {
-            throw new RuntimeException("Fail to run command: which python.");
-        }
-        return IOUtils.toString(process.getInputStream()).trim();
+        interpreterSetting.setProperty("spark.executor.memory", "1g");
+        interpreterSetting.setProperty("spark.executor.instances", "1");
+
+        interpreterSetting.setProperty("spark.kubernetes.executor.request.cores","500m");
+
+        interpreterSetting.setProperty("zeppelin.spark.scala.color", "false");
+        interpreterSetting.setProperty("zeppelin.spark.deprecatedMsg.show", "false");
+
+        // test SparkRInterpreter
+        Interpreter sparkrInterpreter = interpreterFactory.getInterpreter("spark.r", new ExecutionContext("user1", "note1", "test"));
+        InterpreterContext context = new InterpreterContext.Builder().setNoteId("note1").setParagraphId("paragraph_1").build();
+
+        InterpreterResult interpreterResult = sparkrInterpreter.interpret("foo <-TRUE\nprint(foo)", context);
+        assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
+        assertTrue(interpreterResult.toString(), interpreterResult.message().get(0).getData().contains("TRUE"));
     }
 }
