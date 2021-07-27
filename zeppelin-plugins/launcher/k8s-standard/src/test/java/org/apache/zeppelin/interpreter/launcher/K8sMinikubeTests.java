@@ -35,7 +35,7 @@ public class K8sMinikubeTests {
         }
     }
 
-
+    /*
     @Test
     public void testK8sStartShellSuccessful() throws InterpreterException {
         // given
@@ -136,6 +136,7 @@ public class K8sMinikubeTests {
         assertEquals(interpreterResult.toString(), InterpreterResult.Type.TABLE, interpreterResult.message().get(0).getType());
         assertEquals(interpreterResult.toString(), "c\n2\n", interpreterResult.message().get(0).getData());
     }
+    */
 
     @Test
     public void testK8sStartSparkRSuccessful() throws IOException, InterruptedException, XmlPullParserException, InterpreterException {
