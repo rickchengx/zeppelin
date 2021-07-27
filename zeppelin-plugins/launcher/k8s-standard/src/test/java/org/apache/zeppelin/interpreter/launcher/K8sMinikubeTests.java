@@ -1,11 +1,6 @@
 package org.apache.zeppelin.interpreter.launcher;
 
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClient;
-
 import org.apache.commons.io.IOUtils;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.zeppelin.interpreter.*;
 
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -13,20 +8,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 
 import static org.junit.Assert.*;
 
 
-public class K8sRemoteInterpreterProcessMinikubeTest {
+public class K8sMinikubeTests {
     private static MiniZeppelin zeppelin;
     private static InterpreterFactory interpreterFactory;
     private static InterpreterSettingManager interpreterSettingManager;
@@ -34,7 +22,7 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
     @BeforeClass
     public static void setUp() throws IOException {
         zeppelin = new MiniZeppelin();
-        zeppelin.start(K8sRemoteInterpreterProcessMinikubeTest.class);
+        zeppelin.start(K8sMinikubeTests.class);
         interpreterFactory = zeppelin.getInterpreterFactory();
         interpreterSettingManager = zeppelin.getInterpreterSettingManager();
     }
@@ -128,7 +116,6 @@ public class K8sRemoteInterpreterProcessMinikubeTest {
         assertEquals(interpreterResult.toString(), InterpreterResult.Code.SUCCESS, interpreterResult.code());
         assertEquals(interpreterResult.toString(), InterpreterResult.Type.TABLE, interpreterResult.message().get(0).getType());
         assertEquals(interpreterResult.toString(), "c\n2\n", interpreterResult.message().get(0).getData());
-
     }
 
 

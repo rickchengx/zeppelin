@@ -95,6 +95,8 @@ jobs:
         run: |
           export SERVICE_DOMAIN=mydomain
           mvn package -DskipRat -pl zeppelin-plugins -amd -B
+          echo -n "rick mvn test:"
+          mvn test -DskipRat -pl zeppelin-plugins -amd -DTest=K8sMinikubeTests -DfailIfNoTests=false -B
       - name: Cat minikube logs
         if: failure()
         run: |
