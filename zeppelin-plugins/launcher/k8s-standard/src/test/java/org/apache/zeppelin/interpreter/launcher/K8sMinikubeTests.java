@@ -155,6 +155,7 @@ public class K8sMinikubeTests {
 
         interpreterSetting.setProperty("PYSPARK_PYTHON", "python3");
 
+        interpreterSetting.setProperty("spark.kubernetes.container.image", "local/spark-r:latest");
         interpreterSetting.setProperty("spark.kubernetes.container.image.pullPolicy", "Never");
         interpreterSetting.setProperty("SPARK_PRINT_LAUNCH_COMMAND", "true");
 
