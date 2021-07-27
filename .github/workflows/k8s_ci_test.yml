@@ -36,66 +36,75 @@ jobs:
         uses: actions/checkout@v2
       - name: Tune Runner VM
         uses: ./.github/actions/tune-runner-vm
-      - name: Set up JDK 8
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: 8
-      - name: Install socat (For Minikube to use port-forwarding)
-        run: sudo apt-get -y install socat
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.m2/repository
-            !~/.m2/repository/org/apache/zeppelin/
-          key: ${{ runner.os }}-zeppelin-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-zeppelin-
-      - name: build the final distribution
+#      - name: Set up JDK 8
+#        uses: actions/setup-java@v2
+#        with:
+#          distribution: 'adopt'
+#          java-version: 8
+#      - name: Install socat (For Minikube to use port-forwarding)
+#        run: sudo apt-get -y install socat
+#      - name: Cache local Maven repository
+#        uses: actions/cache@v2
+#        with:
+#          path: |
+#            ~/.m2/repository
+#            !~/.m2/repository/org/apache/zeppelin/
+#          key: ${{ runner.os }}-zeppelin-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-zeppelin-
+#      - name: build the final distribution
+#        run: |
+#          mvn install -DskipRat -DskipTests -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -B
+#          mvn package -DskipRat -DskipTests -pl zeppelin-plugins -amd -B
+#          mvn package -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-distribution -am -Pbuild-distr
+#      - name: check the final distribution
+#        run: ls -l zeppelin-distribution/target
+#      - name: set up and start minikube cluster
+#        #uses: medyagh/setup-minikube@master
+#        uses: manusa/actions-setup-minikube@v2.4.2
+#        with:
+#          minikube version: 'v1.16.0'
+#          kubernetes version: 'v1.19.2'
+#      - name: verify minikube
+#        run: |
+#          env
+#          # wait for the minikube to start
+#          sleep 2m
+#          kubectl get pods -A
+#          kubectl cluster-info
+#          kubectl describe nodes
+#      - name: switch docker daemon
+#        run: eval $(minikube -p minikube docker-env)
+      - name: download spark
         run: |
-          mvn install -DskipRat -DskipTests -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -B
-          mvn package -DskipRat -DskipTests -pl zeppelin-plugins -amd -B
-          mvn package -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-distribution -am -Pbuild-distr
-      - name: check the final distribution
-        run: ls -l zeppelin-distribution/target
-      - name: set up and start minikube cluster
-        #uses: medyagh/setup-minikube@master
-        uses: manusa/actions-setup-minikube@v2.4.2
-        with:
-          minikube version: 'v1.16.0'
-          kubernetes version: 'v1.19.2'
-      - name: verify minikube
-        run: |
-          env
-          # wait for the minikube to start
-          sleep 2m
-          kubectl get pods -A
-          kubectl cluster-info
-          kubectl describe nodes
-      - name: prepare docker images
-        run: |
-          eval $(minikube -p minikube docker-env)
-          docker pull registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4
-          docker tag registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4 local/spark:latest
-          mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
-          docker build --progress=plain -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin:latest ./scripts/docker/zeppelin/build-from-distribution/
-          echo -n "verifying images:"
-          docker images
-      - name: mvn testing
-        run: |
-          export SERVICE_DOMAIN=mydomain
-          mvn package -DskipRat -pl zeppelin-plugins -amd -B
-      - name: Cat minikube logs
-        if: failure()
-        run: |
-          kubectl get pods -A
-          minikube logs
-          minikube logs > ~/minikube_logs.log
-      - name: Upload minikube logs
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: minikube-logs
-          path: ~/minikube_logs.log
-          retention-days: 7
+          wget -O ~/spark.tgz https://downloads.apache.org/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz
+          mkdir /opt/spark
+          tar -zxvf ~/spark.tgz -C /opt/spark
+          export SPARK_HOME=/opt/spark
+          ls -l /opt/spark
+#      - name: prepare docker images
+#        run: |
+#          eval $(minikube -p minikube docker-env)
+#          docker pull registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4
+#          docker tag registry.cn-hangzhou.aliyuncs.com/streamcompute/spark-py:testv4 local/spark:latest
+#          mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
+#          docker build --progress=plain -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin:latest ./scripts/docker/zeppelin/build-from-distribution/
+#          echo -n "verifying images:"
+#          docker images
+#      - name: mvn testing
+#        run: |
+#          export SERVICE_DOMAIN=mydomain
+#          mvn package -DskipRat -pl zeppelin-plugins -amd -B
+#      - name: Cat minikube logs
+#        if: failure()
+#        run: |
+#          kubectl get pods -A
+#          minikube logs
+#          minikube logs > ~/minikube_logs.log
+#      - name: Upload minikube logs
+#        uses: actions/upload-artifact@v2
+#        if: failure()
+#        with:
+#          name: minikube-logs
+#          path: ~/minikube_logs.log
+#          retention-days: 7
