@@ -4,8 +4,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.zeppelin.interpreter.*;
 
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class K8sMinikubeTests {
     private static InterpreterFactory interpreterFactory;
     private static InterpreterSettingManager interpreterSettingManager;
 
-    @BeforeClass
+    @Before
     public static void setUp() throws IOException {
         zeppelin = new MiniZeppelin();
         zeppelin.start(K8sMinikubeTests.class);
@@ -28,14 +28,14 @@ public class K8sMinikubeTests {
     }
 
 
-    @AfterClass
+    @After
     public static void tearDown() throws IOException {
         if (zeppelin != null) {
             zeppelin.stop();
         }
     }
 
-    /*
+
     @Test
     public void testK8sStartShellSuccessful() throws InterpreterException {
         // given
@@ -91,6 +91,7 @@ public class K8sMinikubeTests {
 
         interpreterSetting.setProperty("PYSPARK_PYTHON", "python3");
 
+        interpreterSetting.setProperty("spark.kubernetes.container.image", "local/spark-py:latest");
         interpreterSetting.setProperty("spark.kubernetes.container.image.pullPolicy", "Never");
         interpreterSetting.setProperty("SPARK_PRINT_LAUNCH_COMMAND", "true");
 
@@ -136,7 +137,7 @@ public class K8sMinikubeTests {
         assertEquals(interpreterResult.toString(), InterpreterResult.Type.TABLE, interpreterResult.message().get(0).getType());
         assertEquals(interpreterResult.toString(), "c\n2\n", interpreterResult.message().get(0).getData());
     }
-    */
+
 
     @Test
     public void testK8sStartSparkRSuccessful() throws IOException, InterruptedException, XmlPullParserException, InterpreterException {
