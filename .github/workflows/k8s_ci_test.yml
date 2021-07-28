@@ -98,7 +98,7 @@ jobs:
       - name: mvn testing
         run: |
           export SERVICE_DOMAIN=mydomain
-          mvn test -DskipRat -Dtest=K8sMinikubeTests -pl :launcher-k8s-standard -B
+          mvn test -DskipRat -Dtest=K8sMinikubeTestBasic,K8sMinikubeTestPySpark,K8sMinikubeTestSparkR -pl :launcher-k8s-standard -B
       - name: Cat minikube logs
         if: failure()
         run: |
