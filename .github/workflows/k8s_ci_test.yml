@@ -17,9 +17,6 @@ env:
       -Dmaven.wagon.http.retryHandler.count=3
   ZEPPELIN_HELIUM_REGISTRY: helium
   SPARK_PRINT_LAUNCH_COMMAND: "true"
-  #PYSPARK_PYTHON: /usr/share/miniconda/envs/python_3_with_R/bin/python
-  #SPARK_LOCAL_IP: 127.0.0.1
-  #ZEPPELIN_LOCAL_IP: 127.0.0.1
 
 # Use the bash login, because we are using miniconda
 defaults:
@@ -31,6 +28,8 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
+      matrix:
+        sparkVersion: [spark-3.1.2/spark-3.1.2-bin-hadoop3.2, spark-3.1.2/spark-3.1.2-bin-hadoop2.7, spark-2.4.8/spark-2.4.8-bin-hadoop2.7]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
