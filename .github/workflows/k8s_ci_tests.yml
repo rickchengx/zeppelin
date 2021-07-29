@@ -90,14 +90,22 @@ jobs:
           docker images
       - name: build zeppelin docker images
         run: |
+          # move the distribution tar.gz file
           mv ./zeppelin-distribution/target/zeppelin-*.tar.gz ./scripts/docker/zeppelin/build-from-distribution/
+          # copy the properties
+          cp ./scripts/docker/zeppelin/bin/log4j.properties ./scripts/docker/zeppelin/build-from-distribution/
+          cp ./scripts/docker/zeppelin/bin/log4j2.properties ./scripts/docker/zeppelin/build-from-distribution/
+          cp ./scripts/docker/zeppelin/bin/log4j_docker.properties ./scripts/docker/zeppelin/build-from-distribution/
+          cp ./scripts/docker/zeppelin/bin/log4j2_docker.properties ./scripts/docker/zeppelin/build-from-distribution/
+          # build the zeppelin docer image
           docker build --progress=plain -f ./scripts/docker/zeppelin/build-from-distribution/Dockerfile -t local/zeppelin:latest ./scripts/docker/zeppelin/build-from-distribution/
           echo -n "verifying images:"
           docker images
       - name: mvn testing
         run: |
           export SERVICE_DOMAIN=mydomain
-          mvn test -DskipRat -Dtest=K8sMinikubeTestBasic,K8sMinikubeTestPySpark,K8sMinikubeTestSparkR -pl :launcher-k8s-standard -B
+          # Run the maven test classes about the minikube test
+          mvn test -DskipRat -Dtest=K8sMinikubeTestBasic,K8sMinikubeTestPySpark,K8sMinikubeTestSparkR -pl :zeppelin-interpreter-integration -B
       - name: Cat minikube logs
         if: failure()
         run: |

@@ -17,6 +17,7 @@
 
 package org.apache.zeppelin.integration;
 
+import org.apache.zeppelin.conf.ZeppelinConfiguration;
 import org.apache.zeppelin.dep.Dependency;
 import org.apache.zeppelin.interpreter.ExecutionContext;
 import org.apache.zeppelin.interpreter.Interpreter;
@@ -47,7 +48,7 @@ public class JdbcIntegrationTest {
   @BeforeClass
   public static void setUp() throws IOException {
     zeppelin = new MiniZeppelin();
-    zeppelin.start(JdbcIntegrationTest.class);
+    zeppelin.start(JdbcIntegrationTest.class, ZeppelinConfiguration.create());
     interpreterFactory = zeppelin.getInterpreterFactory();
     interpreterSettingManager = zeppelin.getInterpreterSettingManager();
   }

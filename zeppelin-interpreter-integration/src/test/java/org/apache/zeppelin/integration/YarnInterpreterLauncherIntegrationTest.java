@@ -22,6 +22,7 @@ import org.apache.hadoop.yarn.api.protocolrecords.GetApplicationsRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.GetApplicationsResponse;
 import org.apache.hadoop.yarn.api.records.YarnApplicationState;
 import org.apache.hadoop.yarn.exceptions.YarnException;
+import org.apache.zeppelin.conf.ZeppelinConfiguration;
 import org.apache.zeppelin.dep.Dependency;
 import org.apache.zeppelin.interpreter.ExecutionContext;
 import org.apache.zeppelin.interpreter.Interpreter;
@@ -64,7 +65,7 @@ public class YarnInterpreterLauncherIntegrationTest {
     hadoopCluster.start();
 
     zeppelin = new MiniZeppelin();
-    zeppelin.start(YarnInterpreterLauncherIntegrationTest.class);
+    zeppelin.start(YarnInterpreterLauncherIntegrationTest.class, ZeppelinConfiguration.create());
     interpreterFactory = zeppelin.getInterpreterFactory();
     interpreterSettingManager = zeppelin.getInterpreterSettingManager();
   }
