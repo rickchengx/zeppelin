@@ -49,7 +49,7 @@ public class K8sMinikubeTestPySpark {
         zconf.setProperty("zeppelin.interpreter.connect.timeout", "600000");
 
         zeppelin = new MiniZeppelin();
-        zeppelin.start(K8sMinikubeTestBasic.class, zconf);
+        zeppelin.start(K8sMinikubeTestPySpark.class, zconf);
         interpreterFactory = zeppelin.getInterpreterFactory();
         interpreterSettingManager = zeppelin.getInterpreterSettingManager();
     }
