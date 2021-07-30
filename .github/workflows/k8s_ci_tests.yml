@@ -105,7 +105,7 @@ jobs:
         run: |
           export SERVICE_DOMAIN=mydomain
           # Run the maven test classes about the minikube test
-          mvn test -DskipRat -Dtest=K8sMinikubeTestBasic,K8sMinikubeTestPySpark,K8sMinikubeTestSparkR -pl :zeppelin-interpreter-integration -B
+          mvn test -DskipRat -Dtest=K8sMinikubeTestBasic,K8sMinikubeTestPySpark,K8sMinikubeTestSparkR -pl zeppelin-interpreter-integration -B -Pintegration -DfailIfNoTests=false
       - name: Cat minikube logs
         if: failure()
         run: |
