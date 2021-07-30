@@ -53,7 +53,7 @@ jobs:
             ${{ runner.os }}-zeppelin-
       - name: build the final distribution
         run: |
-          mvn install -DskipRat -DskipTests -pl zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -B
+          mvn install -DskipRat -DskipTests -Pintegration -pl zeppelin-interpreter-integration,zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -B
           mvn package -DskipRat -DskipTests -pl zeppelin-plugins -amd -B
           mvn package -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-distribution -am -Pbuild-distr
       - name: check the final distribution
