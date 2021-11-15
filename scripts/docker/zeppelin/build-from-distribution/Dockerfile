@@ -37,7 +37,7 @@ ADD zeppelin-bin.tar.gz /
 RUN ls -l / && \
     # zeppelin-bin.tar.gz will be as /zeppelin-{VERSION}-SNAPSHPT
     mv /zeppelin-* ${ZEPPELIN_HOME} && \
-    ls -l ${ZEPPELIN_HOME} && \ls
+    ls -l ${ZEPPELIN_HOME} && \
     chown -R root:root ${ZEPPELIN_HOME} && \
     mkdir -p ${ZEPPELIN_HOME}/logs ${ZEPPELIN_HOME}/run ${ZEPPELIN_HOME}/webapps && \
     # Allow process to edit /etc/passwd, to create a user entry for zeppelin
