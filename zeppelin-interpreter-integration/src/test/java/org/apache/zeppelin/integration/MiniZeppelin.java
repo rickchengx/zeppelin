@@ -65,7 +65,7 @@ public class MiniZeppelin {
   }
 
   public void start(Class clazz, ZeppelinConfiguration zconf) throws IOException {
-    start(clazz, ZeppelinConfiguration.create())
+    start(clazz, ZeppelinConfiguration.create());
   }
 
   public void stop() throws IOException {
