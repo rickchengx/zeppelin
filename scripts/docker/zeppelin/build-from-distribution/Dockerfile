@@ -34,7 +34,7 @@ RUN echo "$LOG_TAG install basic packages" && \
     apt-get clean
 
 ADD zeppelin-bin.tar.gz /
-RUN mv /zeppelin-bin.tar.gz ${ZEPPELIN_HOME} && \
+RUN mv /zeppelin-bin ${ZEPPELIN_HOME} && \
     chown -R root:root ${ZEPPELIN_HOME} && \
     mkdir -p ${ZEPPELIN_HOME}/logs ${ZEPPELIN_HOME}/run ${ZEPPELIN_HOME}/webapps && \
     # Allow process to edit /etc/passwd, to create a user entry for zeppelin
