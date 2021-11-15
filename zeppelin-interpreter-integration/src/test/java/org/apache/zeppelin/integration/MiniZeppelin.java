@@ -64,6 +64,10 @@ public class MiniZeppelin {
     interpreterFactory = new InterpreterFactory(interpreterSettingManager);
   }
 
+  public void start(Class clazz, ZeppelinConfiguration zconf) throws IOException {
+    start(clazz, ZeppelinConfiguration.create())
+  }
+
   public void stop() throws IOException {
     interpreterSettingManager.close();
     FileUtils.deleteDirectory(confDir);
