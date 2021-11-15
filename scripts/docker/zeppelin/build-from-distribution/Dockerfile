@@ -17,9 +17,7 @@ FROM ubuntu:20.04
 
 LABEL maintainer="Apache Software Foundation <dev@zeppelin.apache.org>"
 
-ENV Z_VERSION="0.10.0-SNAPSHOT"
-
-ENV LOG_TAG="[ZEPPELIN_${Z_VERSION}]:" \
+ENV LOG_TAG="[ZEPPELIN]:" \
     ZEPPELIN_HOME="/opt/zeppelin" \
     HOME="/opt/zeppelin" \
     LANG=en_US.UTF-8 \
@@ -35,8 +33,8 @@ RUN echo "$LOG_TAG install basic packages" && \
     apt-get autoclean && \
     apt-get clean
 
-ADD zeppelin-${Z_VERSION}.tar.gz /
-RUN mv /zeppelin-${Z_VERSION} ${ZEPPELIN_HOME} && \
+ADD zeppelin-bin.tar.gz /
+RUN mv /zeppelin-bin.tar.gz ${ZEPPELIN_HOME} && \
     chown -R root:root ${ZEPPELIN_HOME} && \
     mkdir -p ${ZEPPELIN_HOME}/logs ${ZEPPELIN_HOME}/run ${ZEPPELIN_HOME}/webapps && \
     # Allow process to edit /etc/passwd, to create a user entry for zeppelin
