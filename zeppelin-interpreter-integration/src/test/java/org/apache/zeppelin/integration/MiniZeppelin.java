@@ -64,7 +64,7 @@ public class MiniZeppelin {
     interpreterFactory = new InterpreterFactory(interpreterSettingManager);
   }
 
-  public void start(Class clazz, ZeppelinConfiguration zconf) throws IOException {
+  public void start(Class clazz) throws IOException {
     start(clazz, ZeppelinConfiguration.create());
   }
 
