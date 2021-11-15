@@ -33,7 +33,7 @@ RUN echo "$LOG_TAG install basic packages" && \
     apt-get autoclean && \
     apt-get clean
 
-ADD zeppelin-bin.tar.gz /
+ADD zeppelin-bin.tar.gz /zeppelin-bin
 RUN ls -l / && \
     mv /zeppelin-bin ${ZEPPELIN_HOME} && \
     chown -R root:root ${ZEPPELIN_HOME} && \
