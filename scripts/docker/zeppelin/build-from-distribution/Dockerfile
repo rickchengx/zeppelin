@@ -54,9 +54,9 @@ ARG miniconda_sha256="79510c6e7bd9e012856e25dcb21b3e093aa4ac8113d9aa7e82a86987ea
 # Install python and R packages via conda
 COPY env_python_3_with_R.yml /env_python_3_with_R.yml
 RUN set -ex && \
-    wget -nv https://repo.anaconda.com/miniconda/Miniconda3-${miniconda_version}-Linux-x86_64.sh -O miniconda.sh && \
-    echo "${miniconda_sha256} miniconda.sh" > anaconda.sha256 && \
-    sha256sum --strict -c anaconda.sha256 && \
+    wget -nv https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \
+    # echo "${miniconda_sha256} miniconda.sh" > anaconda.sha256 && \
+    # sha256sum --strict -c anaconda.sha256 && \
     bash miniconda.sh -b -p /opt/conda && \
     export PATH=/opt/conda/bin:$PATH && \
     conda config --set always_yes yes --set changeps1 no && \
