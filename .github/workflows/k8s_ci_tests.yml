@@ -51,29 +51,29 @@ jobs:
           key: ${{ runner.os }}-zeppelin-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-zeppelin-
-      - name: build the final distribution
-        run: |
-          mvn install -DskipRat -DskipTests -Pintegration -pl zeppelin-interpreter-integration,zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -B
-          mvn package -DskipRat -DskipTests -pl zeppelin-plugins -amd -B
-          mvn package -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-distribution -am -Pbuild-distr
-      - name: check the final distribution
-        run: ls -l zeppelin-distribution/target
-      - name: set up and start minikube cluster
-        #uses: medyagh/setup-minikube@master
-        uses: manusa/actions-setup-minikube@v2.4.2
-        with:
-          minikube version: 'v1.16.0'
-          kubernetes version: 'v1.19.2'
-      - name: verify minikube
-        run: |
-          env
-          # wait for the minikube to start
-          sleep 2m
-          kubectl get pods -A
-          kubectl cluster-info
-          kubectl describe nodes
-      - name: switch docker daemon
-        run: eval $(minikube -p minikube docker-env)
+#      - name: build the final distribution
+#        run: |
+#          mvn install -DskipRat -DskipTests -Pintegration -pl zeppelin-interpreter-integration,zeppelin-server,zeppelin-web,spark-submit,spark/spark-dependencies,markdown,angular,shell -am -B
+#          mvn package -DskipRat -DskipTests -pl zeppelin-plugins -amd -B
+#          mvn package -Pbuild-distr -DskipRat -DskipTests -pl zeppelin-distribution -am -Pbuild-distr
+#      - name: check the final distribution
+#        run: ls -l zeppelin-distribution/target
+#      - name: set up and start minikube cluster
+#        #uses: medyagh/setup-minikube@master
+#        uses: manusa/actions-setup-minikube@v2.4.2
+#        with:
+#          minikube version: 'v1.16.0'
+#          kubernetes version: 'v1.19.2'
+#      - name: verify minikube
+#        run: |
+#          env
+#          # wait for the minikube to start
+#          sleep 2m
+#          kubectl get pods -A
+#          kubectl cluster-info
+#          kubectl describe nodes
+#      - name: switch docker daemon
+#        run: eval $(minikube -p minikube docker-env)
       - name: download spark and build images
         run: |
           wget -O ~/spark.tgz https://downloads.apache.org/spark/${{ matrix.sparkVersion }}.tgz
@@ -84,6 +84,22 @@ jobs:
           # change the kerserver keys.gnupg.net to keyserver.ubuntu.com (https://github.com/apache/spark/pull/33071)
           sed -i 's/keys.gnupg.net/keyserver.ubuntu.com/g' ./kubernetes/dockerfiles/spark/bindings/R/Dockerfile
           cat ./kubernetes/dockerfiles/spark/bindings/R/Dockerfile
+          # change python3 to python3.7
+          sed -i s/apt install -y python3 python3-pip && \\/apt install -y wget/' ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile
+          sed -i '31,33c # Install conda to manage python and R packages \
+          > ARG miniconda_version="py37_4.9.2" \
+          > # Hashes via https://docs.conda.io/en/latest/miniconda_hashes.html \
+          > ARG miniconda_sha256="79510c6e7bd9e012856e25dcb21b3e093aa4ac8113d9aa7e82a86987eabe1c31" \
+          > RUN set -ex && \\ \
+          >     wget -nv https://repo.anaconda.com/miniconda/Miniconda3-${miniconda_version}-Linux-x86_64.sh -O miniconda.sh && \\ \
+          >     echo "${miniconda_sha256} miniconda.sh" > anaconda.sha256 && \\ \
+          >     sha256sum --strict -c anaconda.sha256 && \\ \
+          >     bash miniconda.sh -b -p /opt/conda && \\ \
+          >     export PATH=/opt/conda/bin:$PATH && \\ \
+          >     conda config --set always_yes yes --set changeps1 no && \\ \
+          >     conda info -a \
+          > ENV PATH \/opt\/conda\/bin:$PATH' ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile
+          cat ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile
           ./bin/docker-image-tool.sh -r local -t latest -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
           ./bin/docker-image-tool.sh -r local -t latest -R ./kubernetes/dockerfiles/spark/bindings/R/Dockerfile build
           echo -n "verifying images:"
