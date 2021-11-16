@@ -64,7 +64,7 @@ RUN set -ex && \
     conda install mamba -c conda-forge && \
     mamba env update -f /env_python_3_with_R.yml --prune && \
     # Cleanup
-    rm -v miniconda.sh anaconda.sha256  && \
+    # rm -v miniconda.sh anaconda.sha256  && \
     # Cleanup based on https://github.com/ContinuumIO/docker-images/commit/cac3352bf21a26fa0b97925b578fb24a0fe8c383
     find /opt/conda/ -follow -type f -name '*.a' -delete && \
     find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
